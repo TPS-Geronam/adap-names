@@ -54,7 +54,7 @@ export class Name {
     }
 
     /**
-     * Returns component of Name at index i
+     * Returns properly masked component string
      * @methodtype get-method
      */
     public getComponent(i: number): string {
