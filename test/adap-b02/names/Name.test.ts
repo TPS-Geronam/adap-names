@@ -57,3 +57,70 @@ describe("Escape character extravaganza", () => {
     expect(n.asString()).toBe("oss.cs.fau.de#people");
   });
 });
+
+describe("Custom tests", () => {
+  it("test given cases from class documentation (StringName)", () => {
+    let n = new StringName("///", '/');
+    expect(n.asString()).toBe("///");
+    expect(n.getNoComponents()).toBe(4);
+    n.append("people");
+    expect(n.asString()).toBe("////people");
+
+    n = new StringName("Oh\\.\\.\\.", '.');
+    expect(n.getNoComponents()).toBe(1);
+    
+    n = new StringName("Oh\\\\.\\\\.\\\\.", '.');
+    expect(n.getNoComponents()).toBe(4);
+  });
+
+  it("test given cases from class documentation (StringArrayName)", () => {
+    let n = new StringArrayName(["", "", "", ""], '/');
+    expect(n.asString()).toBe("///");
+    n.append("people");
+    expect(n.asString()).toBe("////people");
+
+    n = new StringArrayName(["Oh\\.\\.\\."], '.');
+    expect(n.getNoComponents()).toBe(1);
+  });
+
+  it("test own cases", () => {
+    let ESCAPE_CHARACTER: string = "\\";
+    let DEFAULT_DELIMITER: string = ".";
+
+    let n: Name = new StringArrayName(["1", "2", "3", "4"], ESCAPE_CHARACTER);
+    expect(n.asString()).toBe(`1\\2\\3\\4`);
+    expect(n.getNoComponents()).toBe(4);
+    n.append("5");
+    expect(n.asString()).toBe(`1\\2\\3\\4\\5`);
+    expect(n.getNoComponents()).toBe(5);
+
+    let delim: string = `${ESCAPE_CHARACTER}${ESCAPE_CHARACTER}`;
+    n = new StringArrayName(["1", "2", "3", "4"], delim);
+    expect(n.asString()).toBe(`1\\\\2\\\\3\\\\4`);
+    expect(n.getNoComponents()).toBe(4);
+    n.append("5");
+    expect(n.asString()).toBe(`1\\\\2\\\\3\\\\4\\\\5`);
+    expect(n.getNoComponents()).toBe(5);
+
+    delim = `${ESCAPE_CHARACTER}${DEFAULT_DELIMITER}`;
+    n = new StringArrayName(["1", "2", "3", "4"], delim);
+    expect(n.asString()).toBe(`1\\.2\\.3\\.4`);
+    expect(n.getNoComponents()).toBe(4);
+    n.append("5");
+    expect(n.asString()).toBe(`1\\.2\\.3\\.4\\.5`);
+    expect(n.asString('+')).toBe(`1+2+3+4+5`);
+    expect(n.getNoComponents()).toBe(5);
+
+    n = new StringArrayName(["my/name", "other/name"], "/");
+    expect(n.asString()).toBe("my/name/other/name");
+    expect(n.getNoComponents()).toBe(2);
+    expect(n.asDataString()).toBe("my\\/name/other\\/name");
+    expect(n.asString('-')).toBe("my/name-other/name");
+
+    n = new StringName("my\\/name/other\\/name", "/");
+    expect(n.asString()).toBe("my/name/other/name");
+    expect(n.getNoComponents()).toBe(2);
+    expect(n.asDataString()).toBe("my\\/name/other\\/name");
+    expect(n.asString('-')).toBe("my/name-other/name");
+  });
+});
