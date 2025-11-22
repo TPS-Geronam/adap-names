@@ -6,39 +6,48 @@ export abstract class AbstractName implements Name {
     protected delimiter: string = DEFAULT_DELIMITER;
 
     constructor(delimiter: string = DEFAULT_DELIMITER) {
-        throw new Error("needs implementation or deletion");
+        this.delimiter = delimiter ?? DEFAULT_DELIMITER;
     }
 
-    public clone(): Name {
-        throw new Error("needs implementation or deletion");
-    }
+    abstract clone(): Name;
 
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation or deletion");
+        let components: string[] = [];
+        let componentsCount: number = this.getNoComponents();
+        for (let i = 0; i < componentsCount; i++) {
+            components.push(this.getComponent(i));
+        }
+        return components
+            .map(c => c.replaceAll(ESCAPE_CHARACTER, ""))
+            .join(delimiter);
     }
 
     public toString(): string {
-        return this.asDataString();
+        return this.asString(this.delimiter);
     }
 
-    public asDataString(): string {
-        throw new Error("needs implementation or deletion");
-    }
+    abstract asDataString(): string;
 
     public isEqual(other: Name): boolean {
-        throw new Error("needs implementation or deletion");
+        return this.getHashCode() === other.getHashCode();
     }
 
     public getHashCode(): number {
-        throw new Error("needs implementation or deletion");
+        // https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript
+        let hash = 0;
+        for (const char of this.asDataString()) {
+            hash = (hash << 5) - hash + char.charCodeAt(0);
+            hash |= 0; // Constrain to 32bit integer
+        }
+        return hash;
     }
 
     public isEmpty(): boolean {
-        throw new Error("needs implementation or deletion");
+        return this.asString() === "" && this.getNoComponents() === 0;
     }
 
     public getDelimiterCharacter(): string {
-        throw new Error("needs implementation or deletion");
+        return this.delimiter;
     }
 
     abstract getNoComponents(): number;
@@ -51,7 +60,11 @@ export abstract class AbstractName implements Name {
     abstract remove(i: number): void;
 
     public concat(other: Name): void {
-        throw new Error("needs implementation or deletion");
+        let otherComponentCount: number = other.getNoComponents();
+        for (let i = 0; i < otherComponentCount; i++) {
+            let c: string = other.getComponent(i);
+            this.append(c);
+        }
     }
 
 }
