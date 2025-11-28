@@ -1,3 +1,5 @@
+import { IllegalArgumentException } from "../common/IllegalArgumentException";
+import { MethodFailedException } from "../common/MethodFailedException";
 import { Node } from "./Node";
 
 export class Directory extends Node {
@@ -17,6 +19,8 @@ export class Directory extends Node {
     }
 
     public removeChildNode(cn: Node): void {
+        IllegalArgumentException.assert(this.childNodes.has(cn));
+
         this.childNodes.delete(cn); // Yikes! Should have been called remove
     }
 

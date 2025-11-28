@@ -1,3 +1,5 @@
+import { IllegalArgumentException } from "../common/IllegalArgumentException";
+import { MethodFailedException } from "../common/MethodFailedException";
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
 
@@ -13,14 +15,22 @@ export class Node {
     }
 
     protected initialize(pn: Directory): void {
+        IllegalArgumentException.assert(pn != null);
+
         this.parentNode = pn;
         this.parentNode.addChildNode(this);
+
+        MethodFailedException.assert(pn.hasChildNode(this));
     }
 
     public move(to: Directory): void {
+        IllegalArgumentException.assert(to != null);
+
         this.parentNode.removeChildNode(this);
         to.addChildNode(this);
         this.parentNode = to;
+
+        MethodFailedException.assert(to.hasChildNode(this));
     }
 
     public getFullName(): Name {
@@ -38,10 +48,14 @@ export class Node {
     }
 
     public rename(bn: string): void {
+        IllegalArgumentException.assert(bn != null);
+
         this.doSetBaseName(bn);
     }
 
     protected doSetBaseName(bn: string): void {
+        IllegalArgumentException.assert(bn != null);
+
         this.baseName = bn;
     }
 
