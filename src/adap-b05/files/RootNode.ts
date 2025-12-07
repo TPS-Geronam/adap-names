@@ -1,3 +1,4 @@
+import { InvalidStateException } from "../common/InvalidStateException";
 import { Name } from "../names/Name";
 import { StringName } from "../names/StringName";
 import { Directory } from "./Directory";
@@ -24,6 +25,12 @@ export class RootNode extends Directory {
 
     public move(to: Directory): void {
         // null operation
+    }
+
+    public getBaseName(): string {
+        let bn: string = this.doGetBaseName();
+        InvalidStateException.assert(bn == "", "root must have empty base name");
+        return bn;
     }
 
     protected doSetBaseName(bn: string): void {

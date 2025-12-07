@@ -1,5 +1,7 @@
+import { Exception } from "../common/Exception";
 import { IllegalArgumentException } from "../common/IllegalArgumentException";
 import { InvalidStateException } from "../common/InvalidStateException";
+import { ServiceFailureException } from "../common/ServiceFailureException";
 
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
@@ -16,11 +18,13 @@ export class Node {
     }
 
     protected initialize(pn: Directory): void {
+        IllegalArgumentException.assert(pn != null);
         this.parentNode = pn;
         this.parentNode.addChildNode(this);
     }
 
     public move(to: Directory): void {
+        IllegalArgumentException.assert(to != null);
         this.parentNode.removeChildNode(this);
         to.addChildNode(this);
         this.parentNode = to;
@@ -33,7 +37,9 @@ export class Node {
     }
 
     public getBaseName(): string {
-        return this.doGetBaseName();
+        let bn: string = this.doGetBaseName();
+        InvalidStateException.assert(bn != "", "non-roots must have non-empty base names");
+        return bn;
     }
 
     protected doGetBaseName(): string {
@@ -41,10 +47,12 @@ export class Node {
     }
 
     public rename(bn: string): void {
+        IllegalArgumentException.assert(bn != null);
         this.doSetBaseName(bn);
     }
 
     protected doSetBaseName(bn: string): void {
+        IllegalArgumentException.assert(bn != null);
         this.baseName = bn;
     }
 
@@ -57,7 +65,15 @@ export class Node {
      * @param bn basename of node being searched for
      */
     public findNodes(bn: string): Set<Node> {
-        throw new Error("needs implementation or deletion");
+        IllegalArgumentException.assert(bn != null);
+        let res: Set<Node> = new Set<Node>([]);
+        try {
+            if (bn === this.getBaseName()) {
+                res.add(this);
+            }
+        } catch (ex: any) {
+            ServiceFailureException.assert(false, "service has invalid state", ex as Exception);
+        }
+        return res;
     }
-
 }
