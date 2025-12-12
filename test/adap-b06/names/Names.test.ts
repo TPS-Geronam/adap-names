@@ -27,7 +27,7 @@ describe("Basic StringArrayName function tests", () => {
     it("test insert", () => {
         let n: Name = new StringArrayName(["oss", "fau", "de"]);
         n = n.insert(1, "cs");
-        expect(ne.asString()).toBe("oss.cs.fau.de");
+        expect(n.asString()).toBe("oss.cs.fau.de");
     });
     it("test append", () => {
         let n: Name = new StringArrayName(["oss", "cs", "fau"]);
