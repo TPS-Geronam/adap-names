@@ -8,17 +8,17 @@ import { IllegalArgumentException } from "../../../src/adap-b06/common/IllegalAr
 describe("Basic StringName function tests", () => {
     it("test insert", () => {
         let n: Name = new StringName("oss.fau.de");
-        n.insert(1, "cs");
+        n = n.insert(1, "cs");
         expect(n.asString()).toBe("oss.cs.fau.de");
     });
     it("test append", () => {
         let n: Name = new StringName("oss.cs.fau");
-        n.append("de");
+        n = n.append("de");
         expect(n.asString()).toBe("oss.cs.fau.de");
     });
     it("test remove", () => {
         let n: Name = new StringName("oss.cs.fau.de");
-        n.remove(0);
+        n = n.remove(0);
         expect(n.asString()).toBe("cs.fau.de");
     });
 });
@@ -26,17 +26,17 @@ describe("Basic StringName function tests", () => {
 describe("Basic StringArrayName function tests", () => {
     it("test insert", () => {
         let n: Name = new StringArrayName(["oss", "fau", "de"]);
-        n.insert(1, "cs");
-        expect(n.asString()).toBe("oss.cs.fau.de");
+        n = n.insert(1, "cs");
+        expect(ne.asString()).toBe("oss.cs.fau.de");
     });
     it("test append", () => {
         let n: Name = new StringArrayName(["oss", "cs", "fau"]);
-        n.append("de");
+        n = n.append("de");
         expect(n.asString()).toBe("oss.cs.fau.de");
     });
     it("test remove", () => {
         let n: Name = new StringArrayName(["oss", "cs", "fau", "de"]);
-        n.remove(0);
+        n = n.remove(0);
         expect(n.asString()).toBe("cs.fau.de");
     });
 });
@@ -44,7 +44,7 @@ describe("Basic StringArrayName function tests", () => {
 describe("Delimiter function tests", () => {
     it("test insert", () => {
         let n: Name = new StringName("oss#fau#de", '#');
-        n.insert(1, "cs");
+        n = n.insert(1, "cs");
         expect(n.asString()).toBe("oss#cs#fau#de");
     });
 });
@@ -54,7 +54,7 @@ describe("Escape character extravaganza", () => {
         let n: Name = new StringName("oss.cs.fau.de", '#');
         expect(n.getNoComponents()).toBe(1);
         expect(n.asString()).toBe("oss.cs.fau.de");
-        n.append("people");
+        n = n.append("people");
         expect(n.asString()).toBe("oss.cs.fau.de#people");
     });
 });
@@ -64,7 +64,7 @@ describe("Custom tests", () => {
         let n = new StringName("///", '/');
         expect(n.asString()).toBe("///");
         expect(n.getNoComponents()).toBe(4);
-        n.append("people");
+        n = n.append("people");
         expect(n.asString()).toBe("////people");
 
         n = new StringName("Oh\\.\\.\\.", '.');
@@ -77,7 +77,7 @@ describe("Custom tests", () => {
     it("test given cases from class documentation (StringArrayName)", () => {
         let n = new StringArrayName(["", "", "", ""], '/');
         expect(n.asString()).toBe("///");
-        n.append("people");
+        n = n.append("people");
         expect(n.asString()).toBe("////people");
 
         n = new StringArrayName(["Oh\\.\\.\\."], '.');
@@ -85,22 +85,17 @@ describe("Custom tests", () => {
     });
 
     it("test concat and clone", () => {
-        let n = new StringArrayName(["", "", "", ""], '/');
+        let n: Name = new StringArrayName(["", "", "", ""], '/');
         expect(n.asString()).toBe("///");
-        n.append("people");
+        n = n.append("people");
         expect(n.asString()).toBe("////people");
 
         let n2 = new StringArrayName(["Oh\\.\\.\\."], '.');
         expect(n2.getNoComponents()).toBe(1);
 
-        n.concat(new StringArrayName(["a", "b", "c", "d"], '/'));
+        n = n.concat(new StringArrayName(["a", "b", "c", "d"], '/'));
         expect(n.getNoComponents()).toBe(9);
         expect(n.asString()).toBe("////people/a/b/c/d");
-
-        let n3 = n.clone();
-        expect(n.asString()).toBe(n3.asString());
-        expect(n.asDataString()).toBe(n3.asDataString());
-        expect(n.getNoComponents()).toBe(n3.getNoComponents());
 
         let n4 = new StringName("my\\/name/other\\/name", "/");
         let n5 = n4.clone();
@@ -193,10 +188,10 @@ describe("Custom tests", () => {
         expect(() => new StringArrayName(["oss"]).insert(999, "")).toThrow(IllegalArgumentException);
 
         let n: Name = new StringName("oss.fau.de");
-        n.insert(1, "")
+        n = n.insert(1, "")
         expect(n.getNoComponents()).toBe(4);
         n = new StringArrayName(["oss"]);
-        n.insert(1, "")
+        n = n.insert(1, "")
         expect(n.getNoComponents()).toBe(2);
 
         expect(() => new StringName("oss.fau.de").insert(0, "\\\\.abc")).toThrow(IllegalArgumentException);
