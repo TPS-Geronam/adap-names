@@ -73,16 +73,17 @@ export abstract class AbstractName implements Name {
 
         let originalComponentCount: number = this.getNoComponents();
         let otherComponentCount: number = other.getNoComponents();
+        let curName: Name = this;
         for (let i = 0; i < otherComponentCount; i++) {
             let c: string = other.getComponent(i);
-            this.append(c);
+            curName = curName.append(c);
         }
 
         MethodFailedException.assert(
-            this.getNoComponents() == (originalComponentCount + otherComponentCount)
+            curName.getNoComponents() == (originalComponentCount + otherComponentCount)
         );
 
-        return this;
+        return curName;
     }
 
     protected isEscapedComponentString(c: string): boolean {

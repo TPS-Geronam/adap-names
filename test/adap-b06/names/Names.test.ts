@@ -97,6 +97,11 @@ describe("Custom tests", () => {
         expect(n.getNoComponents()).toBe(9);
         expect(n.asString()).toBe("////people/a/b/c/d");
 
+        //let n3 = n.clone();
+        //expect(n.asString()).toBe(n3.asString());
+        //expect(n.asDataString()).toBe(n3.asDataString());
+        //expect(n.getNoComponents()).toBe(n3.getNoComponents());
+
         let n4 = new StringName("my\\/name/other\\/name", "/");
         let n5 = n4.clone();
         expect(n4.asString()).toBe(n5.asString());
